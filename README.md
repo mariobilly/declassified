@@ -10,6 +10,28 @@ on the first start.
 Inspired by the redacted-document portrait in a reel by [Jordan Gladman](https://www.instagram.com/reel/DdjdcquO5QM/).
 Declassified is an independent project and shares no code with it.
 
+![Declassified](docs/screenshot.jpg)
+
+<!-- videos:start -->
+## See it in action
+
+<p align="center"><a href="docs/videos/tutorial.mp4"><img src="docs/videos/tutorial.jpg" alt="How it works" width="640"></a><br><b>▶ <a href="docs/videos/tutorial.mp4">How it works</a></b> (0:53, with captions)</p>
+
+**Made with Declassified, from public-domain portraits (The Met) and a free Pexels clip**
+
+<table><tr>
+<td width="33%" align="center"><a href="docs/videos/examples/portrait-classic.mp4"><img src="docs/videos/examples/portrait-classic.gif" alt="Classic (photo)"></a><br><a href="docs/videos/examples/portrait-classic.mp4">Classic (photo)</a></td>
+<td width="33%" align="center"><a href="docs/videos/examples/portrait-heavy-redaction.mp4"><img src="docs/videos/examples/portrait-heavy-redaction.gif" alt="Heavy redaction, 4:5"></a><br><a href="docs/videos/examples/portrait-heavy-redaction.mp4">Heavy redaction, 4:5</a></td>
+<td width="33%" align="center"><a href="docs/videos/examples/portrait-typewriter-files.mp4"><img src="docs/videos/examples/portrait-typewriter-files.gif" alt="Typewriter files, 1:1"></a><br><a href="docs/videos/examples/portrait-typewriter-files.mp4">Typewriter files, 1:1</a></td>
+</tr><tr>
+<td width="33%" align="center"><a href="docs/videos/examples/dancer-classic.mp4"><img src="docs/videos/examples/dancer-classic.gif" alt="Classic (video)"></a><br><a href="docs/videos/examples/dancer-classic.mp4">Classic (video)</a></td>
+<td width="33%" align="center"><a href="docs/videos/examples/dancer-court-sealed.mp4"><img src="docs/videos/examples/dancer-court-sealed.gif" alt="Court sealed, page only"></a><br><a href="docs/videos/examples/dancer-court-sealed.mp4">Court sealed, page only</a></td>
+<td width="33%" align="center"><a href="docs/videos/examples/portrait-clean-bars-wide.mp4"><img src="docs/videos/examples/portrait-clean-bars-wide.gif" alt="Clean bars, 16:9"></a><br><a href="docs/videos/examples/portrait-clean-bars-wide.mp4">Clean bars, 16:9</a></td>
+</tr></table>
+
+Click any picture to play the video. Example sources: *Portrait of a Woman* by Adriaen Hanneman, [The Met](https://www.metmuseum.org/art/collection/search/436630); *Portrait of a Man* by Velázquez, [The Met](https://www.metmuseum.org/art/collection/search/437874); *Portrait of a Young Man* by Antonello da Messina, [The Met](https://www.metmuseum.org/art/collection/search/435581); *Portrait of a Man* by Hugo van der Goes, [The Met](https://www.metmuseum.org/art/collection/search/436521) (all CC0); "A Woman Dancing Gracefully" by [Pavel Danilyuk](https://www.pexels.com/video/a-woman-dancing-gracefully-6939968/) (Pexels licence).
+<!-- videos:end -->
+
 ## Install
 
 You need:
@@ -105,6 +127,8 @@ get a generated test tone, so the sound path is tested too).
 - Test clip: "A Woman Dancing Gracefully" by
   [Pavel Danilyuk](https://www.pexels.com/video/a-woman-dancing-gracefully-6939968/)
   ([Pexels licence](https://www.pexels.com/license/)). See [samples/CREDITS.md](samples/CREDITS.md).
+- Footage in the tutorial and examples: the test photos and clip above, and *Portrait of a Man* by Hugo van der
+  Goes, [The Metropolitan Museum of Art](https://www.metmuseum.org/art/collection/search/436521) (CC0).
 - [rembg](https://github.com/danielgatis/rembg) (MIT) with the [U2-Net](https://github.com/xuebinqin/U-2-Net)
   models (Apache-2.0).
 
