@@ -156,7 +156,9 @@ class Source:
         return D
 
     def info(self):
+        # width/height: the working size (the preview proxy for a video); source_*: the file's real size, for display
         return {"id": self.id, "name": self.name, "kind": self.kind, "width": self.w, "height": self.h,
+                "source_width": getattr(self, "src_w", self.w), "source_height": getattr(self, "src_h", self.h),
                 "fps": self.fps, "frames": self.frames, "duration": self.duration, "has_audio": self.has_audio,
                 "ready": self.ready_fraction(), "path": self.path}
 

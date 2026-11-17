@@ -202,7 +202,7 @@ function setSource(info) {
   document.body.classList.toggle("is-image", info.kind === "image");
   document.body.classList.toggle("is-video", info.kind === "video");
   $("#empty").hidden = true;
-  const bits = [`${info.width}×${info.height}`];
+  const bits = [`${info.source_width || info.width}×${info.source_height || info.height}`];
   if (info.kind === "video") bits.push(`${(+info.fps).toFixed(2).replace(/\.00$/, "")} fps`, fmtTime(info.duration),
                                         info.has_audio ? "audio" : "no audio");
   else bits.push("photo → animated loop");
