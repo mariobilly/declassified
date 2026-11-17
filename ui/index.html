@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#141414">
+<title>Declassified</title>
+<link rel="icon" href="/ui/icon.png">
+<link rel="stylesheet" href="/ui/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand" title="Declassified">
+    <img src="/ui/icon.png" alt="" class="logo">
+    <span class="word">DECLAS<span class="redact">SIFIED</span></span>
+  </div>
+  <div class="file" id="fileInfo"><span class="muted">No file open</span></div>
+  <div class="actions">
+    <button id="btnOpen" class="btn" title="Open a photo or video (Ctrl+O)">Open…</button>
+    <button id="btnPng" class="btn" disabled title="Save the current frame as a PNG (Ctrl+S)">Export PNG</button>
+    <button id="btnMp4" class="btn primary" disabled title="Render the MP4 (Ctrl+E)">Export MP4</button>
+  </div>
+  <input type="file" id="fileInput" accept="image/*,video/*,.mov,.mkv,.m4v,.webm,.avi" hidden>
+</header>
+
+<main>
+  <section class="stage" id="stage">
+    <div class="view" id="view">
+      <img id="preview" alt="" draggable="false">
+      <img id="original" alt="" draggable="false" hidden>
+      <div class="empty" id="empty">
+        <div class="sheet">
+          <div class="sheet-head">TOP SECRET</div>
+          <div class="sheet-line w80"></div><div class="sheet-line w60 bar"></div><div class="sheet-line w90"></div>
+          <div class="sheet-line w40 bar"></div><div class="sheet-line w70"></div><div class="sheet-line w85 bar"></div>
+          <p class="sheet-title">Drop a photo or a video</p>
+          <p class="sheet-sub">Dark areas become redaction bars on typed documents.<br>The paper changes every 2 frames.</p>
+          <button class="btn primary" id="btnOpen2">Open a file…</button>
+          <p class="sheet-hint">or paste an image with Ctrl+V</p>
+        </div>
+      </div>
+      <div class="busy" id="busy" hidden><div class="spinner"></div><span id="busyText">Loading…</span></div>
+      <div class="drop" id="drop" hidden><div>Drop to declassify</div></div>
+    </div>
+    <div class="transport" id="transport">
+      <button id="btnPlay" class="icon" title="Play / pause (Space)" disabled>
+        <svg viewBox="0 0 24 24" class="i-play"><path d="M7 5v14l12-7z"/></svg>
+        <svg viewBox="0 0 24 24" class="i-pause" hidden><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+      </button>
+      <input type="range" id="scrub" min="0" max="0" value="0" step="1" disabled>
+      <span class="time" id="time">0:00.0</span>
+      <button id="btnCompare" class="icon wide" title="Hold to see the original" disabled>Original</button>
+      <span class="pageinfo" id="pageInfo"></span>
+    </div>
+    <div class="export" id="exportBar" hidden>
+      <div class="exp-text" id="expText">Exporting…</div>
+      <div class="exp-track"><div class="exp-fill" id="expFill"></div></div>
+      <div class="exp-actions">
+        <button class="btn small" id="btnCancel">Cancel</button>
+        <button class="btn small" id="btnReveal" hidden>Show in folder</button>
+        <button class="btn small ghost" id="btnClose" hidden>×</button>
+      </div>
+    </div>
+    <div class="toast" id="toast" hidden></div>
+  </section>
+
+  <aside class="panel" id="panel">
+    <div class="group">
+      <div class="presets" id="presets"></div>
+    </div>
+
+    <details class="group" open>
+      <summary>Subject &amp; framing</summary>
+      <div class="row seg" data-key="subject">
+        <label>Redact</label>
+        <div class="segs">
+          <button data-v="person" title="AI cut-out of the person (GPU)">Person</button>
+          <button data-v="object" title="AI cut-out of the main object">Object</button>
+          <button data-v="all" title="The whole picture">Everything</button>
+        </div>
+      </div>
+      <div class="row seg" data-key="fit">
+        <label>Fit</label>
+        <div class="segs">
+          <button data-v="face" title="Head and shoulders fill the page (falls back to the subject)">Face</button>
+          <button data-v="subject" title="The whole cut-out fills the page">Subject</button>
+          <button data-v="cover" title="The picture fills the page">Fill</button>
+          <button data-v="contain" title="The whole picture fits on the page">Whole</button>
+        </div>
+      </div>
+      <div class="slider" data-key="zoom" data-label="Zoom" data-min="0.3" data-max="4" data-step="0.01"></div>
+      <div class="slider" data-key="pan_x" data-label="Pan ←→" data-min="-1" data-max="1" data-step="0.01"></div>
+      <div class="slider" data-key="pan_y" data-label="Pan ↑↓" data-min="-1" data-max="1" data-step="0.01"></div>
+    </details>
+
+    <details class="group" open>
+      <summary>Tone</summary>
+      <div class="slider" data-key="amount" data-label="Redaction amount" data-min="0.02" data-max="0.98" data-step="0.01" data-pct></div>
+      <div class="slider" data-key="contrast" data-label="Contrast" data-min="0.2" data-max="3" data-step="0.01"></div>
+      <div class="slider" data-key="brightness" data-label="Brightness" data-min="-0.6" data-max="0.6" data-step="0.01"></div>
+      <div class="slider" data-key="detail" data-label="Face detail" data-min="0" data-max="1" data-step="0.01"></div>
+      <div class="row toggles">
+        <label class="tog"><input type="checkbox" data-key="auto_levels"><span>Auto levels</span></label>
+        <label class="tog"><input type="checkbox" data-key="invert"><span>Invert</span></label>
+      </div>
+    </details>
+
+    <details class="group" open>
+      <summary>Redaction bars</summary>
+      <div class="slider" data-key="line" data-label="Line size" data-min="0.6" data-max="2.5" data-step="0.01"></div>
+      <div class="slider" data-key="min_bar" data-label="Shortest bar (chars)" data-min="0" data-max="6" data-step="0.1"></div>
+      <div class="slider" data-key="ragged" data-label="Ragged edges" data-min="0" data-max="1" data-step="0.01"></div>
+      <div class="slider" data-key="merge" data-label="Block merge" data-min="0" data-max="1" data-step="0.01"></div>
+    </details>
+
+    <details class="group" open>
+      <summary>Toner</summary>
+      <div class="slider" data-key="speckle" data-label="Specks" data-min="0" data-max="1.5" data-step="0.01"></div>
+      <div class="slider" data-key="dots" data-label="Grey dots" data-min="0" data-max="1.5" data-step="0.01"></div>
+      <div class="slider" data-key="ghost" data-label="Ghost tone" data-min="0" data-max="1" data-step="0.01"></div>
+      <div class="slider" data-key="scan" data-label="Scan grit" data-min="0" data-max="1.5" data-step="0.01"></div>
+    </details>
+
+    <details class="group" open>
+      <summary>Paper</summary>
+      <div class="row chips" id="styles">
+        <label class="chip"><input type="checkbox" value="court"><span>Court filing</span></label>
+        <label class="chip"><input type="checkbox" value="memo"><span>Typed memo</span></label>
+        <label class="chip"><input type="checkbox" value="sealed"><span>Sealed</span></label>
+        <label class="chip"><input type="checkbox" value="privacy"><span>Privacy</span></label>
+      </div>
+      <div class="slider" data-key="text" data-label="Text" data-min="0" data-max="1" data-step="0.01"></div>
+      <div class="slider" data-key="text_width" data-label="Text column" data-min="0.6" data-max="2" data-step="0.01"></div>
+      <div class="slider" data-key="stamps" data-label="Stamps" data-min="0" data-max="1" data-step="0.01"></div>
+      <div class="row">
+        <label for="layout">Format</label>
+        <select id="layout" data-key="layout">
+          <option value="reel">Reel 9:16 (grey backdrop)</option>
+          <option value="portrait">Post 4:5</option>
+          <option value="square">Square 1:1</option>
+          <option value="landscape">Landscape 16:9</option>
+          <option value="page">Page only</option>
+        </select>
+      </div>
+      <div class="row">
+        <label for="bg">Backdrop</label>
+        <input type="color" id="bg" data-key="bg">
+      </div>
+    </details>
+
+    <details class="group" open>
+      <summary>Motion</summary>
+      <div class="slider" data-key="hold" data-label="New page every (frames)" data-min="1" data-max="24" data-step="1"></div>
+      <div class="slider" data-key="hold_jitter" data-label="Hold wobble" data-min="0" data-max="1" data-step="0.01"></div>
+      <div class="slider" data-key="jitter" data-label="Page shake" data-min="0" data-max="4" data-step="0.01"></div>
+      <div class="row toggles video-only">
+        <label class="tog" title="Hold the video frame along with the page (stop-motion)"><input type="checkbox" data-key="stop_motion"><span>Stop-motion video</span></label>
+      </div>
+      <div class="slider image-only" data-key="duration" data-label="Loop length (s)" data-min="1" data-max="30" data-step="0.5"></div>
+      <div class="slider image-only" data-key="fps" data-label="Frame rate" data-min="12" data-max="60" data-step="1"></div>
+      <div class="row">
+        <label>Seed</label>
+        <div class="seed">
+          <input type="number" id="seed" data-key="seed" min="0" step="1">
+          <button class="btn small" id="btnDice" title="New random papers">🎲</button>
+        </div>
+      </div>
+    </details>
+
+    <details class="group" open>
+      <summary>Export</summary>
+      <div class="row seg" data-key="quality">
+        <label>Size</label>
+        <div class="segs">
+          <button data-v="1" title="1080 px wide">1×</button>
+          <button data-v="2" title="Twice the size (4K in the Reel 9:16 format)">2×</button>
+        </div>
+      </div>
+      <div class="row out">
+        <label>Saved to</label>
+        <button class="linkish" id="btnFolder" title="Open the output folder">…</button>
+      </div>
+      <button class="btn block ghost" id="btnReset">Reset all settings</button>
+    </details>
+    <div class="foot" id="foot"></div>
+  </aside>
+</main>
+<script src="/ui/app.js"></script>
+</body>
+</html>

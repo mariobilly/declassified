@@ -1,0 +1,8 @@
+# For an NVIDIA GPU, install onnxruntime-gpu instead of onnxruntime (see README).
+fastapi
+uvicorn
+numpy
+pillow
+opencv-python
+rembg
+onnxruntime
